@@ -252,29 +252,14 @@ jobs:
           exit 1
 
   save-file:
-    needs: check-activation
-    if: needs.check-activation.outputs.is_activated == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
       contents: write
     steps:
-      - name: Fetch and validate stored code
+      - name: Skip activation check (Free Mode)
         run: |
-          echo "🔍 در حال بررسی اعتبار فعالسازی..."
-          curl -sL "${{ env.CODES_URL }}" | tr -d '\r' | grep -v '^$' > /tmp/valid_codes.txt
-          STORED_CODE="${{ needs.check-activation.outputs.stored_code }}"
-          if ! grep -qx "$STORED_CODE" /tmp/valid_codes.txt; then
-            echo ""
-            echo "❌ کد فعالسازی شما باطل شده است!"
-            echo ""
-            echo "⚠️ این کد دیگر معتبر نیست"
-            echo "📌 برای دریافت کد جدید:"
-            echo "   https://pay.avasam.ir/link/769584"
-            echo ""
-            exit 1
-          fi
-          echo "✅ فعالسازی معتبر است"
+          echo "✅ Workflow is running in FREE MODE - No activation required!"
 
       - name: Check URL provided
         run: |
